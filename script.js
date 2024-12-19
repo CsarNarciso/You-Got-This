@@ -23,6 +23,9 @@ function cleanAndFormatWordsAsArray(wordsAsString){
 }
 
 function stopSpeaker(){
+	inputText = "";
+	referenceWords = [];
+	outputElement.innerHTML = "";
 	recognizer.stop();
 }
 
