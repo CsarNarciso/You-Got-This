@@ -22,13 +22,6 @@ function cleanAndFormatWordsAsArray(wordsAsString){
 	return wordsAsString.trim().replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "").toLowerCase().split(/\s+/);
 }
 
-function stopSpeaker(){
-	inputText = "";
-	referenceWords = [];
-	outputElement.innerHTML = "";
-	recognizer.stop();
-}
-
 
 //Read aloud
 document.getElementById('readAloudButton').onclick = function(){
@@ -43,8 +36,9 @@ document.getElementById('readAloudButton').onclick = function(){
 
 //Start speaker
 document.getElementById('startSpeakerButton').onclick = function() {
-	stopSpeaker();
-	
+
+	outputElement.innerHTML = "";
+
 	inputText = document.getElementById('textReference').value;
 	referenceWords = cleanAndFormatWordsAsArray(inputText);
 	
@@ -52,7 +46,11 @@ document.getElementById('startSpeakerButton').onclick = function() {
 }
 
 //Stop speaker
-document.getElementById('stopSpeakerButton').addEventListener('click', stopSpeaker);
+document.getElementById('stopSpeakerButton').onclick = function() {
+	inputText = "";
+	referenceWords = [];
+	recognizer.stop();
+}
 
 
 //On each speak recognition time
