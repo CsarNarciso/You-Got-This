@@ -1,39 +1,58 @@
 var SpeechRecognition = SpeechRecognition || webkitSpeechRecognition
 var SpeechRecognitionEvent = SpeechRecognitionEvent || webkitSpeechRecognitionEvent
 
-var recognizer = new SpeechRecognition();
-
 // Configure recognizer
-recognizer.continuous = true;
+var recognizer = new SpeechRecognition();
 recognizer.lang = 'en-US';
-//recognizer.interimResults = true;
-recognizer.maxAlternatives = 1;
+recognizer.continuous = true;
+recognizer.interimResults = true;
 
-var spokenElement = document.getElementById('spoken');
-var spoken = "";
-var result = 0;
+var outputElement = document.getElementById('output');
+var referenceWords = cleanAndFormatWordsAsArray(document.getElementById('textReference').value);
 
-//Start speaking button
-document.getElementById('speakButton').onclick = function(event) {
-    recognizer.start();
-    console.log('---Recognizer ready!---');
-    spokenElement.innerText = "";
+function cleanAndFormatWordsAsArray(wordsAsString){
+	return words.trim.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "").split(/\s+/).toLowerCase();
 }
 
-//Stop button
-document.getElementById('stopButton').onclick = function(event) {
-    recognizer.stop();
-    console.log('---Recognizer stopped---');
-    spoken = "";
-    result = 0;
+function stopSpeaker(){
+	recognizer.stop();
 }
 
-//Configure recognizer events
+//Start speaker
+document.getElementById('startSpeakerButton').onclick = function(event) {
+	stopSpeaker();
+	recognizer.start();
+}
+
+//Stop speaker
+document.getElementById('stopSpeakerButton').onclick(stopSpeaker);
+
+
+//On each speak recognition time
 recognizer.onresult = function(event) {
-    spoken = spoken + ", " + event.results[result][0].transcript;
-    console.log(spoken);
-    spokenElement.innerText = spoken; 
-    result = result + 1;
+	
+	outputElement.innerHTML = "";
+    
+	spoken = event.results[event.index][0].transcript;
+	
+	if( spoken !=== undefined ){
+		
+		spokenWords = cleanAndFormatWordsAsArray(spoken);
+		
+		referenceWords.forEach( (word, index) => {
+		
+			if(spokenWords[index] === word){
+				outputElement.innerHTML = `<span style="color: green;">${word}</span>`
+			}
+			else{
+				outputElement.innerHTML = `<span style="color: red;">${word}</span>`
+			}
+		});
+	}
+	else {
+		//the word index doesn't exist
+		outputElement.innerHTML = `<span style="color: red;">${word}</span>`
+	}
 }
 
 recognizer.onnomatch = function(event) {
