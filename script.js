@@ -1,14 +1,22 @@
-var SpeechRecognition = SpeechRecognition || webkitSpeechRecognition
-var SpeechRecognitionEvent = SpeechRecognitionEvent || webkitSpeechRecognitionEvent
+const language = "en-US";
 
 // Configure recognizer
-var recognizer = new SpeechRecognition();
-recognizer.lang = 'en-US';
+let SpeechRecognition = SpeechRecognition || webkitSpeechRecognition
+let SpeechRecognitionEvent = SpeechRecognitionEvent || webkitSpeechRecognitionEvent
+
+const recognizer = new SpeechRecognition();
+recognizer.lang = language;
 recognizer.continuous = true;
 recognizer.interimResults = true;
 
-var outputElement = document.getElementById('output');
-var referenceWords = cleanAndFormatWordsAsArray(document.getElementById('textReference').value);
+// Configure voice speaker 
+const synth = window.speechSynthesis;
+
+let outputElement = document.getElementById('output');
+var inputText = document.getElementById('textReference').value;
+var referenceWords = cleanAndFormatWordsAsArray(inputText);
+
+
 
 function cleanAndFormatWordsAsArray(wordsAsString){
 	return words.trim().replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "").split(/\s+/).toLowerCase();
@@ -17,6 +25,16 @@ function cleanAndFormatWordsAsArray(wordsAsString){
 function stopSpeaker(){
 	recognizer.stop();
 }
+
+
+//Read aloud
+document.getElementById('readAloudButton').onclick = function(event){
+	
+	let utterance = new SpeechSynthesisUtterance(inputText.trim());
+	utterance.lang = language;
+	synth.speak(utterance);
+}
+
 
 //Start speaker
 document.getElementById('startSpeakerButton').onclick = function(event) {
@@ -37,7 +55,7 @@ recognizer.onresult = function(event) {
 	
 	if( spoken !== undefined ){
 		
-		spokenWords = cleanAndFormatWordsAsArray(spoken);
+		let spokenWords = cleanAndFormatWordsAsArray(spoken);
 		
 		referenceWords.forEach( (word, index) => {
 		
