@@ -1,8 +1,8 @@
 const language = "en-US";
 
 // Configure recognizer
-let SpeechRecognition = SpeechRecognition || webkitSpeechRecognition
-let SpeechRecognitionEvent = SpeechRecognitionEvent || webkitSpeechRecognitionEvent
+var SpeechRecognition = SpeechRecognition || webkitSpeechRecognition
+var SpeechRecognitionEvent = SpeechRecognitionEvent || webkitSpeechRecognitionEvent
 
 const recognizer = new SpeechRecognition();
 recognizer.lang = language;
@@ -12,14 +12,14 @@ recognizer.interimResults = true;
 // Configure voice speaker 
 const synth = window.speechSynthesis;
 
-let outputElement = document.getElementById('output');
-var inputText = document.getElementById('textReference').value;
-var referenceWords = cleanAndFormatWordsAsArray(inputText);
+var outputElement = document.getElementById('output');
+var inputText = "";
+var referenceWords = [];
 
 
 
 function cleanAndFormatWordsAsArray(wordsAsString){
-	return words.trim().replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "").split(/\s+/).toLowerCase();
+	return wordsAsString.trim().replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "").toLowerCase().split(/\s+/);
 }
 
 function stopSpeaker(){
@@ -28,7 +28,9 @@ function stopSpeaker(){
 
 
 //Read aloud
-document.getElementById('readAloudButton').onclick = function(event){
+document.getElementById('readAloudButton').onclick = function(){
+	
+	inputText = document.getElementById('textReference').value;
 	
 	let utterance = new SpeechSynthesisUtterance(inputText.trim());
 	utterance.lang = language;
@@ -37,8 +39,12 @@ document.getElementById('readAloudButton').onclick = function(event){
 
 
 //Start speaker
-document.getElementById('startSpeakerButton').onclick = function(event) {
+document.getElementById('startSpeakerButton').onclick = function() {
 	stopSpeaker();
+	
+	inputText = document.getElementById('textReference').value;
+	referenceWords = cleanAndFormatWordsAsArray(inputText);
+	
 	recognizer.start();
 }
 
@@ -52,21 +58,20 @@ recognizer.onresult = function(event) {
 	outputElement.innerHTML = "";
     
 	spoken = event.results[event.resultIndex][0].transcript;
+		
+	let spokenWords = cleanAndFormatWordsAsArray(spoken);
 	
-	if( spoken !== undefined ){
-		
-		let spokenWords = cleanAndFormatWordsAsArray(spoken);
-		
-		referenceWords.forEach( (word, index) => {
-		
+	referenceWords.forEach( (word, index) => {
+		if(spokenWords[index] !== undefined){
+			
 			if(spokenWords[index] === word){
-				outputElement.innerHTML += `<span style="color: green;">${word}</span>`;
+				outputElement.innerHTML += `<span style="color: green;">${word} </span>`;
 				return;
 			}
-		});
-	}
-	//The word doesn't match or exist
-	outputElement.innerHTML += `<span style="color: red;">${word}</span>`;
+		}
+		//The word doesn't match or exist
+		outputElement.innerHTML += `<span style="color: red;">${word} </span>`;
+	});
 }
 
 recognizer.onerror = function(event) {
