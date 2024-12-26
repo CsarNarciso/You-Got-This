@@ -8,17 +8,28 @@
     
     <body>
 	
-		<textarea id="textReference" rows="4" cols="50" placeholder="Enter or paste text to practice...">You will got this, you got this!</textarea>
+		<h1>Connect to Room</h1>
+		<label id="userId"></label>
+		<input type="text" id="enterUserId", placeholder="Enter user Id">
+		<button id="connectButton">Connect</button>
 		<br><br>
 	
-        <button id="startSpeakerButton">Speak</button>
-        
-        <button id="stopSpeakerButton">Stop</button>
-
-		<button id="readAloudButton">Read aloud</button>
-
+	
+		<h1>Room</h1>
+		<label>Time </label> <div id="prhaseTime"></div>
+	
+		<label>Prhase</label>
+		<div id="prhase"></div>
+		<br>
+		<label>Room Users</label>
+		<li id="roomUsers"></li>
+		
         <div id="output" style="border: 1px solid #000; padding: 10px; margin-top: 10px; min-height: 50px;"></div>
     
+		<br>
+		<label>Points </label> <div id="points"></div>
+		<label>Remain </label> <div id="remain"></div>
+	
 		<script src="script.js"></script>
 	</body>
 </html>
