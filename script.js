@@ -1,12 +1,12 @@
 const language = "en-US";
 
 var outputElement = document.getElementById('output');
+var phraseElement = document.getElementById('phrase');
 
 var phrases = [
-	"Hi, how are you?", 
-	"Welwome. This is a test.", 
-	"So, just say the phrase.", 
-	"And speak as much as you can."
+	"Welcome. This is a test.", 
+	"So, just say the phrases.", 
+	"And pronunciate as good as you can."
 ];
 
 // Configure recognizer
@@ -22,24 +22,31 @@ recognizer.interimResults = true;
 const synth = window.speechSynthesis;
 
 
-
+var currentPhrase;
 var phraseIndex = 0;
 var roomPhrasesTimer = null;
 
 //On start room
-document.getElementById('startRoom').click(function(){
+document.getElementById('startRoom').onclick = function(){
 	
 	//Start speaker
 	recognizer.start();
-	
+
 	//Handle new phrase every few seconds
-	roomPhrasesTimer = setTimeout(newPhrase, 5000);
-});
+	roomPhrasesTimer = setInterval(newPhrase, 5000);
+}
 
 function stopRoom(){
+	
+	//Clear display
+	phraseElement.textContent = "";
+	outputElement.innerHTML = "";
+	
+	phraseIndex = 0;
+	
 	//Stop speaker
 	recognizer.stop();
-	
+
 	//Stop room phrases timer
 	clearInterval(roomPhrasesTimer);
 }
@@ -49,14 +56,14 @@ function newPhrase(){
 	//If room still has phrases to show
 	if(phraseIndex < phrases.length){
 		
-		var phrase = phrases[phraseIndex];
+		currentPhrase = phrases[phraseIndex];
 		
 		//Show new phrase
 		outputElement.innerHTML = "";
-		document.getElementById('phrase').textContent = phrase;
+		phraseElement.textContent = currentPhrase;
 	
 		//Read it aloud
-		let utterance = new SpeechSynthesisUtterance(phrase);
+		let utterance = new SpeechSynthesisUtterance(currentPhrase);
 		utterance.lang = language;
 		synth.speak(utterance);
 		
@@ -64,7 +71,7 @@ function newPhrase(){
 	}
 	else{
 		//Room finished
-		stopRoom;
+		stopRoom();
 	}	
 }
 
@@ -78,9 +85,11 @@ recognizer.onresult = function(event) {
     
 	spoken = event.results[event.resultIndex][0].transcript;
 		
-	let spokenWords = clearAndFormatWordsAsArray(spoken);
+	let spokenWords = clearAndFormatAsWordsArray(spoken);
 	
-	referenceWords.forEach( (word, index) => {
+	let = currentPhraseAsWords = clearAndFormatAsWordsArray(currentPhrase);
+	
+	currentPhraseAsWords.forEach( (word, index) => {
 		if(spokenWords[index] !== undefined){
 			
 			if(spokenWords[index] === word){
@@ -94,6 +103,6 @@ recognizer.onresult = function(event) {
 }
 
 
-function clearAndFormatWordsAsArray(wordsAsString){
-	return wordsAsString.trim().replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "").toLowerCase().split(/\s+/);
+function clearAndFormatAsWordsArray(text){
+	return text.trim().replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "").toLowerCase().split(/\s+/);
 }
