@@ -2,6 +2,7 @@ const language = "en-US";
 
 var outputElement = document.getElementById('output');
 var phraseElement = document.getElementById('phrase');
+var phraseTimeElement = document.getElementById('phraseTime');
 
 var phrases = [
 	"Welcome. This is a test.", 
@@ -40,6 +41,7 @@ function stopRoom(){
 	
 	//Clear display
 	phraseElement.textContent = "";
+	phraseTimeElement.textContent = "";
 	outputElement.innerHTML = "";
 	
 	phraseIndex = 0;
@@ -49,8 +51,11 @@ function stopRoom(){
 
 	//Stop room phrases timer
 	clearInterval(roomPhrasesTimer);
+	clearInterval(phraseTimer);
 }
 
+var phraseTimer = null;
+var phraseTime = 5;
 function newPhrase(){
 	
 	//If room still has phrases to show
@@ -63,11 +68,26 @@ function newPhrase(){
 		phraseElement.textContent = currentPhrase;
 	
 		//Read it aloud
-		let utterance = new SpeechSynthesisUtterance(currentPhrase);
-		utterance.lang = language;
-		synth.speak(utterance);
+		//let utterance = new SpeechSynthesisUtterance(currentPhrase);
+		//utterance.lang = language;
+		//synth.speak(utterance);
 		
 		phraseIndex++;
+		
+		//And keep track of phrase's elapsed time
+		phraseTime = 5;
+		phraseTimeElement.textContent = phraseTime;
+		clearInterval(phraseTimer);
+		
+		phraseTimer = setInterval(() => {
+			
+			//to display current phrase time second
+			phraseTime--;
+			
+			phraseTimeElement.textContent = phraseTime;
+		}, 1000);
+		
+		
 	}
 	else{
 		//Room finished
