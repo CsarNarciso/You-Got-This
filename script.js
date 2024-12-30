@@ -1,5 +1,5 @@
 const language = "en-US";
-const timePerPhrase = 5;
+const timePerPhrase = 2;
 
 var phrases = [
 	"Welcome. This is a test.", 
@@ -18,8 +18,8 @@ var spoken = "";
 var currentPhrase;
 var phraseIndex = 0;
 
-var roomPhrasesTimer = null;
-var phraseTimer = null;
+var nextPhraseDelayTimer = null;
+var countDownTimer = null;
 
 // Configure recognizer
 var SpeechRecognition = SpeechRecognition || webkitSpeechRecognition
@@ -51,7 +51,7 @@ document.getElementById('startRoom').onclick = function(){
 		
 	recognizer.onstart = function(){
 		//Handle new phrase every few seconds
-		roomPhrasesTimer = setInterval(newPhrase, timePerPhrase*1000);
+		newPhrase();
 	}
 }
 
@@ -65,10 +65,9 @@ function stopRoom(){
 	phraseIndex = 0;
 	
 	//Stop speaker
+	clearInterval(nextPhraseDelayTimer);
+	clearInterval(countDownTimer);
 	recognizer.stop();
-
-	clearInterval(roomPhrasesTimer);
-	clearInterval(phraseTimer);
 }
 
 function newPhrase(){
@@ -83,7 +82,7 @@ function newPhrase(){
 		outputElement.innerHTML = "";
 		phraseElement.textContent = currentPhrase;
 		
-		clearInterval(roomPhrasesTimer);
+		clearInterval(nextPhraseDelayTimer);
 		
 		utterance.onend = function(){
 			
@@ -92,21 +91,19 @@ function newPhrase(){
 			//And keep track of phrase's elapsed time
 			let phraseTime = timePerPhrase;
 			phraseTimeElement.textContent = phraseTime;
-			
-			clearInterval(phraseTimer);
-			
-			phraseTimer = setInterval(() => {
+						
+			countDownTimer = setInterval(() => {
 				
 				phraseTime--;
 				
 				if(phraseTime <= 0){
-					clearInterval(phraseTimer);
+					clearInterval(countDownTimer);
 				}
 				//Display current phrase time second
 				phraseTimeElement.textContent = phraseTime;
 			}, 1000);
 			
-			roomPhrasesTimer = setInterval(newPhrase, timePerPhrase*1000);
+			nextPhraseDelayTimer = setInterval(newPhrase, timePerPhrase*1000);
 		}
 		
 		//Read it aloud
