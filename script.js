@@ -41,19 +41,18 @@ var utterance = new SpeechSynthesisUtterance();
 utterance.lang = language;
 
 var readingAloud = false;
-synth.onend = function(){
-	readingAloud=false;
-}
 
 
 
 //On start room
 document.getElementById('startRoom').onclick = function(){
+	
 	recognizer.start();
-}
-recognizer.onstart = function(){
-	//Handle new phrase every few seconds
-	roomPhrasesTimer = setInterval(newPhrase, timePerPhrase*1000);
+		
+	recognizer.onstart = function(){
+		//Handle new phrase every few seconds
+		roomPhrasesTimer = setInterval(newPhrase, timePerPhrase*1000);
+	}
 }
 
 function stopRoom(){
@@ -68,7 +67,6 @@ function stopRoom(){
 	//Stop speaker
 	recognizer.stop();
 
-	//Stop room phrases timer
 	clearInterval(roomPhrasesTimer);
 	clearInterval(phraseTimer);
 }
@@ -78,31 +76,43 @@ function newPhrase(){
 	//If room still has phrases to show
 	if(phraseIndex < phrases.length){
 		
+		//Get new phrase
 		currentPhrase = phrases[phraseIndex];
+		utterance.text = currentPhrase;
 		
-		//Show new phrase
 		outputElement.innerHTML = "";
 		phraseElement.textContent = currentPhrase;
-	
+		
+		clearInterval(roomPhrasesTimer);
+		
+		utterance.onend = function(){
+			
+			readingAloud=false;
+			
+			//And keep track of phrase's elapsed time
+			let phraseTime = timePerPhrase;
+			phraseTimeElement.textContent = phraseTime;
+			
+			clearInterval(phraseTimer);
+			
+			phraseTimer = setInterval(() => {
+				
+				phraseTime--;
+				
+				if(phraseTime <= 0){
+					clearInterval(phraseTimer);
+				}
+				//Display current phrase time second
+				phraseTimeElement.textContent = phraseTime;
+			}, 1000);
+			
+			roomPhrasesTimer = setInterval(newPhrase, timePerPhrase*1000);
+		}
+		
 		//Read it aloud
 		readingAloud=true;
-		utterance.text = currentPhrase;
 		synth.speak(utterance);
-		
 		phraseIndex++;
-		
-		//And keep track of phrase's elapsed time
-		let phraseTime = timePerPhrase;
-		phraseTimeElement.textContent = phraseTime;
-		clearInterval(phraseTimer);
-		
-		phraseTimer = setInterval(() => {
-			
-			//to display current phrase time second
-			phraseTime--;
-			
-			phraseTimeElement.textContent = phraseTime;
-		}, 1000);
 	}
 	else{
 		//Room finished
