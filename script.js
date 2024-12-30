@@ -1,14 +1,24 @@
 const language = "en-US";
-
-var outputElement = document.getElementById('output');
-var phraseElement = document.getElementById('phrase');
-var phraseTimeElement = document.getElementById('phraseTime');
+const timePerPhrase = 5;
 
 var phrases = [
 	"Welcome. This is a test.", 
 	"So, just say the phrases.", 
 	"And pronunciate as good as you can."
 ];
+
+var points = 0;
+
+var outputElement = document.getElementById('output');
+var phraseElement = document.getElementById('phrase');
+var phraseTimeElement = document.getElementById('phraseTime');
+var pointsElement = document.getElementById('points');
+
+var currentPhrase;
+var phraseIndex = 0;
+
+var roomPhrasesTimer = null;
+var phraseTimer = null;
 
 // Configure recognizer
 var SpeechRecognition = SpeechRecognition || webkitSpeechRecognition
@@ -17,15 +27,13 @@ var SpeechRecognitionEvent = SpeechRecognitionEvent || webkitSpeechRecognitionEv
 const recognizer = new SpeechRecognition();
 recognizer.lang = language;
 recognizer.continuous = true;
-recognizer.interimResults = true;
+recognizer.interimResults = false;
+
 
 // Configure voice speaker 
 const synth = window.speechSynthesis;
 
 
-var currentPhrase;
-var phraseIndex = 0;
-var roomPhrasesTimer = null;
 
 //On start room
 document.getElementById('startRoom').onclick = function(){
@@ -34,7 +42,7 @@ document.getElementById('startRoom').onclick = function(){
 	recognizer.start();
 
 	//Handle new phrase every few seconds
-	roomPhrasesTimer = setInterval(newPhrase, 5000);
+	roomPhrasesTimer = setInterval(newPhrase, timePerPhrase*1000);
 }
 
 function stopRoom(){
@@ -53,9 +61,7 @@ function stopRoom(){
 	clearInterval(roomPhrasesTimer);
 	clearInterval(phraseTimer);
 }
-
-var phraseTimer = null;
-var phraseTime = 5;
+var spoken = "";
 function newPhrase(){
 	
 	//If room still has phrases to show
@@ -75,7 +81,7 @@ function newPhrase(){
 		phraseIndex++;
 		
 		//And keep track of phrase's elapsed time
-		phraseTime = 5;
+		let phraseTime = timePerPhrase;
 		phraseTimeElement.textContent = phraseTime;
 		clearInterval(phraseTimer);
 		
@@ -86,8 +92,6 @@ function newPhrase(){
 			
 			phraseTimeElement.textContent = phraseTime;
 		}, 1000);
-		
-		
 	}
 	else{
 		//Room finished
@@ -104,7 +108,7 @@ recognizer.onresult = function(event) {
 	outputElement.innerHTML = "";
     
 	spoken = event.results[event.resultIndex][0].transcript;
-		
+	
 	let spokenWords = clearAndFormatAsWordsArray(spoken);
 	
 	let = currentPhraseAsWords = clearAndFormatAsWordsArray(currentPhrase);
@@ -113,12 +117,20 @@ recognizer.onresult = function(event) {
 		if(spokenWords[index] !== undefined){
 			
 			if(spokenWords[index] === word){
+				
 				outputElement.innerHTML += `<span style="color: green;">${word} </span>`;
+				
+				//Increase points
+				points++;
+				pointsElement.textContent = points;
+				
 				return;
 			}
+			else{
+				//The word doesn't match
+				outputElement.innerHTML += `<span style="color: red;">${spokenWords[index]} </span>`;
+			}
 		}
-		//The word doesn't match or exist
-		outputElement.innerHTML += `<span style="color: red;">${word} </span>`;
 	});
 }
 
