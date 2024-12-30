@@ -30,6 +30,10 @@ recognizer.lang = language;
 recognizer.continuous = true;
 recognizer.interimResults = false;
 
+recognizer.onerror = function(){
+	stopRoom();
+}
+
 
 // Configure voice speaker 
 const synth = window.speechSynthesis;
@@ -45,10 +49,9 @@ synth.onend = function(){
 
 //On start room
 document.getElementById('startRoom').onclick = function(){
-	
-	//Start speaker
 	recognizer.start();
-
+}
+recognizer.onstart = function(){
 	//Handle new phrase every few seconds
 	roomPhrasesTimer = setInterval(newPhrase, timePerPhrase*1000);
 }
