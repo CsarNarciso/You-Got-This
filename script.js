@@ -13,6 +13,7 @@ var phraseElement = document.getElementById('phrase');
 var phraseTimeElement = document.getElementById('phraseTime');
 var pointsElement = document.getElementById('points');
 var remainElement = document.getElementById('remain');
+var finalScoreElement = document.getElementById('finalScore');
 
 var spoken = "";
 var currentPhrase;
@@ -54,7 +55,9 @@ document.getElementById('startRoom').onclick = function(){
 	recognizer.start();
 	recognizerStarted = true;
 	
-	pointsElement.textContent = 0;
+	points = 0;
+	pointsElement.textContent = points;
+	finalScoreElement.textContent = points;
 	
 	remain = phrases.length;
 	remainElement.textContent = remain;
@@ -87,6 +90,9 @@ function stopRoom(){
 	//Stop speaker
 	recognizerStarted = false;
 	recognizer.stop();
+	
+	//Display results
+	finalScoreElement.textContent = points;
 }
 
 
