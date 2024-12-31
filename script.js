@@ -8,6 +8,7 @@ var phrases = [
 ];
 
 var points = 0;
+var newPoints = null;
 
 var outputElement = document.getElementById('output');
 var phraseElement = document.getElementById('phrase');
@@ -50,7 +51,7 @@ document.getElementById('startRoom').onclick = function(){
 		
 	recognizer.onstart = function(){
 		//Handle new phrase every few seconds
-		newPhrase();
+		nextPhraseDelayTimer = setInterval(newPhrase, timePerPhrase*1000);
 	}
 	
 	recognizer.onerror = function(){
@@ -78,12 +79,28 @@ function stopRoom(){
 
 function newPhrase(){
 	
+	if(newPoints !== null){
+		
+		utterance.text = "Foucs for more.";
+		
+		if(newPoints>0){
+			
+			utterance.text = "You got this!";	
+			
+			//Increase points
+			points = points + newPoints;
+			pointsElement.textContent = points;			
+		}
+		//Read aloud (celebration for points)
+		readingAloud=true;
+		synth.speak(utterance);
+	}
+	
 	//If room still has phrases to show
 	if(phraseIndex < phrases.length){
 		
 		//Get new phrase
 		currentPhrase = phrases[phraseIndex];
-		utterance.text = currentPhrase;
 		
 		outputElement.innerHTML = "";
 		phraseElement.textContent = currentPhrase;
@@ -112,12 +129,10 @@ function newPhrase(){
 				}, 1000);
 				
 				nextPhraseDelayTimer = setInterval(newPhrase, timePerPhrase*1000);
-			}	
+			}
 		}
-		//Read it aloud
-		readingAloud=true;
-		synth.speak(utterance);
-		phraseIndex++;
+		phraseIndex
+		newPoints = 0;
 	}
 	else{
 		//Room finished
@@ -148,10 +163,8 @@ recognizer.onresult = function(event) {
 					
 					outputElement.innerHTML += `<span style="color: green;">${word} </span>`;
 					
-					//Increase points
-					points++;
-					pointsElement.textContent = points;
-					
+					//Get new points from spoken phrase result
+					newPoints++;
 					return;
 				}
 				else{
