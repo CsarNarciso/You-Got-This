@@ -42,6 +42,10 @@ utterance.lang = language;
 var readingAloud = false;
 
 
+//Audios
+var assertSound = new Audio('./sound/assert.mp3');
+
+
 
 //On start room
 document.getElementById('startRoom').onclick = function(){
@@ -86,6 +90,7 @@ function newPhrase(){
 		if(newPoints>0){
 			
 			utterance.text = "You got this!";	
+			assertSound.play();
 			
 			//Increase points
 			points = points + newPoints;
