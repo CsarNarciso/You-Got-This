@@ -97,6 +97,7 @@ function newPhrase(){
 		
 		//Get new phrase
 		currentPhrase = phrases[phraseIndex];
+		processedWordIndexs = [];
 		
 		outputElement.innerHTML = "";
 		phraseElement.textContent = currentPhrase;
