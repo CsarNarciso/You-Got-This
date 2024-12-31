@@ -28,7 +28,7 @@ var SpeechRecognitionEvent = SpeechRecognitionEvent || webkitSpeechRecognitionEv
 const recognizer = new SpeechRecognition();
 recognizer.lang = language;
 recognizer.continuous = true;
-recognizer.interimResults = false;
+recognizer.interimResults = true;
 
 var recognizerStarted = false;
 
@@ -81,7 +81,6 @@ function stopRoom(){
 
 function newPhrase(){
 	
-
 	//If room still has phrases to show
 	if(phraseIndex < phrases.length){
 		
@@ -123,7 +122,7 @@ function newPhrase(){
 }
 
 
-
+var processedWordIndexs = [];
 //On each speach recognition
 recognizer.onresult = function(event) {
 		
@@ -142,11 +141,15 @@ recognizer.onresult = function(event) {
 				
 				outputElement.innerHTML += `<span style="color: green;">${word} </span>`;
 				
-				//Increase points
-				points++;
-				pointsElement.textContent = points;
-				assertSound.play();
-				
+				if(!processedWordIndexs.includes(index)){
+					
+					//Increase points
+					points++;
+					pointsElement.textContent = points;
+					assertSound.play();
+					
+					processedWordIndexs.push(index);
+				}
 				return;
 			}
 			else{
