@@ -16,6 +16,7 @@ var pointsElement = document.getElementById('points');
 var spoken = "";
 var currentPhrase;
 var phraseIndex = 0;
+var processedWordIndexs = [];
 var phraseTime;
 
 var nextPhraseDelayTimer = null;
@@ -122,7 +123,6 @@ function newPhrase(){
 }
 
 
-var processedWordIndexs = [];
 //On each speach recognition
 recognizer.onresult = function(event) {
 		
