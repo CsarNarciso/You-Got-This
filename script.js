@@ -46,7 +46,7 @@ utterance.lang = language;
 
 //Audios
 var assertSound = new Audio('./sound/assert.mp3');
-
+var celebrateSound = new Audio('./sound/celebrate.mp3');
 
 
 //On start room
@@ -93,6 +93,10 @@ function stopRoom(){
 	
 	//Display results
 	finalScoreElement.textContent = points;
+	
+	if(points > 0){
+		celebrateSound.play();
+	}
 }
 
 
