@@ -1,5 +1,5 @@
 const language = "en-US";
-const timePerPhrase = 2;
+const timePerPhrase = 3;
 
 var phrases = [
 	"Welcome. This is a test.", 
@@ -30,9 +30,7 @@ recognizer.lang = language;
 recognizer.continuous = true;
 recognizer.interimResults = false;
 
-recognizer.onerror = function(){
-	stopRoom();
-}
+var recognizerStarted = false;
 
 
 // Configure voice speaker 
@@ -48,25 +46,33 @@ var readingAloud = false;
 document.getElementById('startRoom').onclick = function(){
 	
 	recognizer.start();
+	recognizerStarted = true;
 		
 	recognizer.onstart = function(){
 		//Handle new phrase every few seconds
 		newPhrase();
 	}
+	
+	recognizer.onerror = function(){
+		stopRoom();
+	}
 }
 
 function stopRoom(){
+	
+	clearInterval(nextPhraseDelayTimer);
+	clearInterval(countDownTimer);
 	
 	//Clear display
 	phraseElement.textContent = "";
 	phraseTimeElement.textContent = "";
 	outputElement.innerHTML = "";
+	pointsElement.textContent = 0;
 	
 	phraseIndex = 0;
 	
 	//Stop speaker
-	clearInterval(nextPhraseDelayTimer);
-	clearInterval(countDownTimer);
+	recognizerStarted = false;
 	recognizer.stop();
 }
 
@@ -88,24 +94,26 @@ function newPhrase(){
 			
 			readingAloud=false;
 			
-			//And keep track of phrase's elapsed time
-			let phraseTime = timePerPhrase;
-			phraseTimeElement.textContent = phraseTime;
-						
-			countDownTimer = setInterval(() => {
+			if(recognizerStarted){
 				
-				phraseTime--;
-				
-				if(phraseTime <= 0){
-					clearInterval(countDownTimer);
-				}
-				//Display current phrase time second
+				//And keep track of phrase's elapsed time
+				let phraseTime = timePerPhrase;
 				phraseTimeElement.textContent = phraseTime;
-			}, 1000);
-			
-			nextPhraseDelayTimer = setInterval(newPhrase, timePerPhrase*1000);
+				
+				countDownTimer = setInterval(() => {
+					
+					phraseTime--;
+					
+					if(phraseTime <= 0){
+						clearInterval(countDownTimer);
+					}
+					//Display current phrase time second
+					phraseTimeElement.textContent = phraseTime;
+				}, 1000);
+				
+				nextPhraseDelayTimer = setInterval(newPhrase, timePerPhrase*1000);
+			}	
 		}
-		
 		//Read it aloud
 		readingAloud=true;
 		synth.speak(utterance);
