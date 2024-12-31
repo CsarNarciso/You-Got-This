@@ -1,9 +1,8 @@
 const language = "en-US";
-const timePerPhrase = 5;
 
 var phrases = [
-	"Welcome. This is a test.", 
-	"So, just say the phrases.", 
+	"This is a test.",
+	"So, just say the phrases.",
 	"And pronunciate as good as you can."
 ];
 
@@ -17,6 +16,7 @@ var pointsElement = document.getElementById('points');
 var spoken = "";
 var currentPhrase;
 var phraseIndex = 0;
+var phraseTime;
 
 var nextPhraseDelayTimer = null;
 var countDownTimer = null;
@@ -97,7 +97,7 @@ function newPhrase(){
 		if(recognizerStarted){
 			
 			//And keep track of phrase's elapsed time
-			let phraseTime = timePerPhrase;
+			phraseTime = Math.floor(clearAndFormatAsWordsArray(currentPhrase).length);
 			phraseTimeElement.textContent = phraseTime;
 			
 			countDownTimer = setInterval(() => {
@@ -112,7 +112,7 @@ function newPhrase(){
 			}, 1000);
 		}
 		
-		nextPhraseDelayTimer = setInterval(newPhrase, timePerPhrase*1000);
+		nextPhraseDelayTimer = setInterval(newPhrase, phraseTime*1000);
 		
 		phraseIndex++;
 	}
