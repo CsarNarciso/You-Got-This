@@ -15,6 +15,9 @@ var pointsElement = document.getElementById('points');
 var remainElement = document.getElementById('remain');
 var finalScoreElement = document.getElementById('finalScore');
 
+var phraseResultsElement = document.getElementById('phraseResults');
+var phraseResultElement;
+
 var spoken = "";
 var currentPhrase;
 var phraseIndex = 0;
@@ -62,6 +65,7 @@ document.getElementById('startRoom').onclick = function(){
 	remain = phrases.length;
 	remainElement.textContent = remain;
 	
+	phraseResultsElement.innerHTML = "";
 		
 	recognizer.onstart = function(){
 		newPhrase();
@@ -131,6 +135,12 @@ function newPhrase(){
 					//Update remaining phrases number
 					remain--;
 					remainElement.textContent = remain;
+					
+					if(phraseResultElement.innerText.length === 0){
+						phraseResultElement.innerHTML = `<span style="color: black;">${phrases[index-1]} </span>`;
+					}
+					phraseResultsElement.appendChild(phraseResultElement);
+					phraseResultElement = document.createElement('li');
 				}
 				//Display current phrase time second
 				phraseTimeElement.textContent = phraseTime;
@@ -146,7 +156,6 @@ function newPhrase(){
 		stopRoom();
 	}	
 }
-
 
 //On each speach recognition
 recognizer.onresult = function(event) {
@@ -164,7 +173,10 @@ recognizer.onresult = function(event) {
 			
 			if(spokenWords[index] === word){
 				
-				outputElement.innerHTML += `<span style="color: green;">${word} </span>`;
+				let spokenPhraseElementReference = `<span style="color: green;">${word} </span>`;
+				
+				outputElement.innerHTML += spokenPhraseElementReference;
+				phraseResultElement.innerHTML += spokenPhraseElementReference;
 				
 				if(!processedWordIndexs.includes(index)){
 					
