@@ -79,6 +79,9 @@ function stopRoom(){
 	phraseTimeElement.textContent = "";
 	outputElement.innerHTML = "";
 	
+	remain = 0;
+	remainElement.textContent = remain;
+	
 	phraseIndex = 0;
 	
 	//Stop speaker
