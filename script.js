@@ -12,10 +12,12 @@ var outputElement = document.getElementById('output');
 var phraseElement = document.getElementById('phrase');
 var phraseTimeElement = document.getElementById('phraseTime');
 var pointsElement = document.getElementById('points');
+var remainElement = document.getElementById('remain');
 
 var spoken = "";
 var currentPhrase;
 var phraseIndex = 0;
+var remain;
 var processedWordIndexs = [];
 var phraseTime;
 
@@ -51,7 +53,12 @@ document.getElementById('startRoom').onclick = function(){
 	
 	recognizer.start();
 	recognizerStarted = true;
+	
 	pointsElement.textContent = 0;
+	
+	remain = phrases.length;
+	remainElement.textContent = remain;
+	
 		
 	recognizer.onstart = function(){
 		newPhrase();
@@ -106,6 +113,10 @@ function newPhrase(){
 				
 				if(phraseTime <= 0){
 					clearInterval(countDownTimer);
+					
+					//Update remaining phrases number
+					remain--;
+					remainElement.textContent = remain;
 				}
 				//Display current phrase time second
 				phraseTimeElement.textContent = phraseTime;
