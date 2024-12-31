@@ -1,5 +1,5 @@
 const language = "en-US";
-const timePerPhrase = 3;
+const timePerPhrase = 5;
 
 var phrases = [
 	"Welcome. This is a test.", 
@@ -8,7 +8,6 @@ var phrases = [
 ];
 
 var points = 0;
-var newPoints = null;
 
 var outputElement = document.getElementById('output');
 var phraseElement = document.getElementById('phrase');
@@ -39,7 +38,6 @@ const synth = window.speechSynthesis;
 var utterance = new SpeechSynthesisUtterance();
 utterance.lang = language;
 
-var readingAloud = false;
 
 
 //Audios
@@ -52,10 +50,10 @@ document.getElementById('startRoom').onclick = function(){
 	
 	recognizer.start();
 	recognizerStarted = true;
+	pointsElement.textContent = 0;
 		
 	recognizer.onstart = function(){
-		//Handle new phrase every few seconds
-		nextPhraseDelayTimer = setInterval(newPhrase, timePerPhrase*1000);
+		newPhrase();
 	}
 	
 	recognizer.onerror = function(){
@@ -72,7 +70,6 @@ function stopRoom(){
 	phraseElement.textContent = "";
 	phraseTimeElement.textContent = "";
 	outputElement.innerHTML = "";
-	pointsElement.textContent = 0;
 	
 	phraseIndex = 0;
 	
@@ -81,26 +78,10 @@ function stopRoom(){
 	recognizer.stop();
 }
 
+
 function newPhrase(){
 	
-	if(newPoints !== null){
-		
-		utterance.text = "Foucs for more.";
-		
-		if(newPoints>0){
-			
-			utterance.text = "You got this!";	
-			assertSound.play();
-			
-			//Increase points
-			points = points + newPoints;
-			pointsElement.textContent = points;			
-		}
-		//Read aloud (celebration for points)
-		readingAloud=true;
-		synth.speak(utterance);
-	}
-	
+
 	//If room still has phrases to show
 	if(phraseIndex < phrases.length){
 		
@@ -110,34 +91,30 @@ function newPhrase(){
 		outputElement.innerHTML = "";
 		phraseElement.textContent = currentPhrase;
 		
+			
 		clearInterval(nextPhraseDelayTimer);
 		
-		utterance.onend = function(){
+		if(recognizerStarted){
 			
-			readingAloud=false;
+			//And keep track of phrase's elapsed time
+			let phraseTime = timePerPhrase;
+			phraseTimeElement.textContent = phraseTime;
 			
-			if(recognizerStarted){
+			countDownTimer = setInterval(() => {
 				
-				//And keep track of phrase's elapsed time
-				let phraseTime = timePerPhrase;
+				phraseTime--;
+				
+				if(phraseTime <= 0){
+					clearInterval(countDownTimer);
+				}
+				//Display current phrase time second
 				phraseTimeElement.textContent = phraseTime;
-				
-				countDownTimer = setInterval(() => {
-					
-					phraseTime--;
-					
-					if(phraseTime <= 0){
-						clearInterval(countDownTimer);
-					}
-					//Display current phrase time second
-					phraseTimeElement.textContent = phraseTime;
-				}, 1000);
-				
-				nextPhraseDelayTimer = setInterval(newPhrase, timePerPhrase*1000);
-			}
+			}, 1000);
 		}
-		phraseIndex
-		newPoints = 0;
+		
+		nextPhraseDelayTimer = setInterval(newPhrase, timePerPhrase*1000);
+		
+		phraseIndex++;
 	}
 	else{
 		//Room finished
@@ -147,38 +124,37 @@ function newPhrase(){
 
 
 
-
 //On each speach recognition
 recognizer.onresult = function(event) {
+		
+	outputElement.innerHTML = "";
 	
-	if(!readingAloud){
-		
-		outputElement.innerHTML = "";
-		
-		spoken = event.results[event.resultIndex][0].transcript;
-		
-		let spokenWords = clearAndFormatAsWordsArray(spoken);
-		
-		let = currentPhraseAsWords = clearAndFormatAsWordsArray(currentPhrase);
-		
-		currentPhraseAsWords.forEach( (word, index) => {
-			if(spokenWords[index] !== undefined){
+	spoken = event.results[event.resultIndex][0].transcript;
+	
+	let spokenWords = clearAndFormatAsWordsArray(spoken);
+	
+	let = currentPhraseAsWords = clearAndFormatAsWordsArray(currentPhrase);
+	
+	currentPhraseAsWords.forEach( (word, index) => {
+		if(spokenWords[index] !== undefined){
+			
+			if(spokenWords[index] === word){
 				
-				if(spokenWords[index] === word){
-					
-					outputElement.innerHTML += `<span style="color: green;">${word} </span>`;
-					
-					//Get new points from spoken phrase result
-					newPoints++;
-					return;
-				}
-				else{
-					//The word doesn't match
-					outputElement.innerHTML += `<span style="color: red;">${spokenWords[index]} </span>`;
-				}
+				outputElement.innerHTML += `<span style="color: green;">${word} </span>`;
+				
+				//Increase points
+				points++;
+				pointsElement.textContent = points;
+				assertSound.play();
+				
+				return;
 			}
-		});
-	}
+			else{
+				//The word doesn't match
+				outputElement.innerHTML += `<span style="color: red;">${spokenWords[index]} </span>`;
+			}
+		}
+	});
 }
 
 
