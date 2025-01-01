@@ -15,7 +15,7 @@ var pointsElement = document.getElementById('points');
 var remainElement = document.getElementById('remain');
 var finalScoreElement = document.getElementById('finalScore');
 
-var phraseResultsElement = document.getElementById('phraseResults');
+var phraseResultsElement = document.getElementById('phraseResults').querySelector('tbody');
 var phraseResultElement;
 
 var spoken = "";
@@ -136,11 +136,21 @@ function newPhrase(){
 					remain--;
 					remainElement.textContent = remain;
 					
-					if(phraseResultElement.innerText.length === 0){
-						phraseResultElement.innerHTML = `<span style="color: black;">${phrases[index-1]} </span>`;
+					let row = document.createElement('tr');
+					let expectedPhaseElement = document.createElement('td');
+					let phraseResultElement = document.createElement('td');
+					
+					if(phraseResultElement.innerHTML.length === 0){
+						phraseResultElement.innerHTML = `<span style="color: black;">No detected</span>`;
 					}
-					phraseResultsElement.appendChild(phraseResultElement);
-					phraseResultElement = document.createElement('li');
+					
+					expectedPhaseElement.addEventListener('click', () => {
+						//do something
+					});
+					
+					row.appendChild(expectedPhaseElement);
+					row.appendChild(phraseResultElement);
+					phraseResultsElement.appendChild(row);
 				}
 				//Display current phrase time second
 				phraseTimeElement.textContent = phraseTime;
@@ -161,6 +171,7 @@ function newPhrase(){
 recognizer.onresult = function(event) {
 		
 	outputElement.innerHTML = "";
+	expectedPhaseElement = "";
 	
 	spoken = event.results[event.resultIndex][0].transcript;
 	
@@ -174,7 +185,6 @@ recognizer.onresult = function(event) {
 			if(spokenWords[index] === word){
 				
 				let spokenPhraseElementReference = `<span style="color: green;">${word} </span>`;
-				
 				outputElement.innerHTML += spokenPhraseElementReference;
 				phraseResultElement.innerHTML += spokenPhraseElementReference;
 				
@@ -191,7 +201,9 @@ recognizer.onresult = function(event) {
 			}
 			else{
 				//The word doesn't match
-				outputElement.innerHTML += `<span style="color: red;">${spokenWords[index]} </span>`;
+				let spokenPhraseElementReference = `<span style="color: red;">${spokenWords[index]} </span>`;
+				outputElement.innerHTML += spokenPhraseElementReference;
+				phraseResultElement.innerHTML += spokenPhraseElementReference;
 			}
 		}
 	});
