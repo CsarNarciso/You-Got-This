@@ -145,7 +145,9 @@ function newPhrase(){
 					}
 					
 					expectedPhaseElement.addEventListener('click', () => {
-						//do something
+						//Read phrase aloud
+						utterance.text = currentPhrase;
+						synth.speak(utterance);
 					});
 					
 					row.appendChild(expectedPhaseElement);
