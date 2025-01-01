@@ -208,7 +208,7 @@ recognizer.onresult = function(event) {
 	outputElement.innerHTML = htmlResultReference;
 	currentPhraseResultElement.innerHTML = htmlResultReference;
 	
-	currentPhraseAsWords.forEach( (word, index) => {
+	cleanAndFormatCurrentPhraseAsWords.forEach( (word, index) => {
 		if(spokenWords[index] !== undefined){
 			
 			if(spokenWords[index] === word && !processedWordIndexs.includes(index)){
