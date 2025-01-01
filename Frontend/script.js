@@ -229,6 +229,12 @@ recognizer.onresult = function(event) {
 				currentPhraseResultElement.innerHTML += spokenPhraseElementReference;
 			}
 		}
+		else{
+			//The word was not spoken (or detected)
+			let spokenPhraseElementReference = `<span style="color: black;">${word} </span>`;
+			outputElement.innerHTML += spokenPhraseElementReference;
+			currentPhraseResultElement.innerHTML += spokenPhraseElementReference;
+		}
 	});
 }
 
