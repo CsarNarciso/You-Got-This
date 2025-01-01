@@ -18,8 +18,10 @@ var finalScoreElement = document.getElementById('finalScore');
 var phraseResultsElement = document.getElementById('phraseResults').querySelector('tbody');
 var currentPhraseResultElement;
 
-var spoken = "";
+var spoken;
 var currentPhrase;
+var currentPhraseAsWords;
+var cleanAndFormatCurrentPhraseAsWords;
 var phraseIndex = 0;
 var remain;
 var processedWordIndexs = [];
@@ -120,6 +122,8 @@ function newPhrase(){
 		
 		//Get new phrase
 		currentPhrase = phrases[phraseIndex];
+		currentPhraseAsWords = currentPhrase.trim().split(/\s+/);
+		cleanAndFormatCurrentPhraseAsWords = clearAndFormatAsWordsArray(currentPhrase);
 		processedWordIndexs = [];
 		
 		outputElement.innerHTML = "";
@@ -199,10 +203,10 @@ recognizer.onresult = function(event) {
 	spoken = event.results[event.resultIndex][0].transcript;
 	
 	let spokenWords = clearAndFormatAsWordsArray(spoken);
-	let currentPhraseAsWords = clearAndFormatAsWordsArray(currentPhrase);
 	
-	outputElement.innerHTML = generateSpokenHTMLReference(currentPhraseAsWords, spokenWords);
-	currentPhraseResultElement.innerHTML = generateSpokenHTMLReference(currentPhraseAsWords, spokenWords);
+	let htmlResultReference = generateSpokenHTMLReference(cleanAndFormatCurrentPhraseAsWords, spokenWords);
+	outputElement.innerHTML = htmlResultReference;
+	currentPhraseResultElement.innerHTML = htmlResultReference;
 	
 	currentPhraseAsWords.forEach( (word, index) => {
 		if(spokenWords[index] !== undefined){
@@ -231,7 +235,7 @@ function generateSpokenHTMLReference(expectedPhrase, spoken){
 			
 			if(spoken[index] === word){
 				//The word matchs
-				newWord = word;
+				newWord = currentPhraseAsWords[index];
 				color = "green";
 			}
 			else{
@@ -241,7 +245,7 @@ function generateSpokenHTMLReference(expectedPhrase, spoken){
 			}
 		}else{
 			//The word has not been spoken (or detected)
-			newWord = word;
+			newWord = currentPhraseAsWords[index];
 			color = "black";
 		}
 		htmlResult += `<span style="color: ${color};">${newWord} </span>`;
