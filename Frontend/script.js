@@ -48,26 +48,32 @@ utterance.lang = language;
 
 
 //Audios
+var startRoomSound = new Audio('./sound/startRoom.mp3');
 var assertSound = new Audio('./sound/assert.mp3');
-var celebrateSound = new Audio('./sound/celebrate.mp3');
-
+var celebrateSound = new Audio('./sound/victory.mp3');
+var defeatSound = new Audio('./sound/defeat.mp3');
 
 //On start room
 document.getElementById('startRoom').onclick = function(){
 	
 	recognizer.start();
-	recognizerStarted = true;
-	
-	points = 0;
-	pointsElement.textContent = points;
-	finalScoreElement.textContent = points;
-	
-	remain = phrases.length;
-	remainElement.textContent = remain;
-	
-	phraseResultsElement.innerHTML = "";
 		
 	recognizer.onstart = function(){
+		
+		recognizerStarted = true;
+		
+		points = 0;
+		pointsElement.textContent = points;
+		finalScoreElement.textContent = points;
+		
+		remain = phrases.length;
+		remainElement.textContent = remain;
+		
+		phraseResultsElement.innerHTML = "";
+			
+		//Play start room sound effect
+		startRoomSound.play();
+		
 		newPhrase();
 	}
 	
@@ -100,6 +106,9 @@ function stopRoom(){
 	
 	if(points > 0){
 		celebrateSound.play();
+	}
+	else{
+		defeatSound.play();
 	}
 }
 
