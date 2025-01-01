@@ -116,7 +116,6 @@ function newPhrase(){
 		outputElement.innerHTML = "";
 		phraseElement.textContent = currentPhrase;
 		
-			
 		clearInterval(nextPhraseDelayTimer);
 		
 		if(recognizerStarted){
@@ -124,6 +123,30 @@ function newPhrase(){
 			//And keep track of phrase's elapsed time
 			phraseTime = Math.floor(clearAndFormatAsWordsArray(currentPhrase).length);
 			phraseTimeElement.textContent = phraseTime;
+			
+			let row = document.createElement('tr');
+			
+			let expectedPhaseElement = document.createElement('td');
+			expectedPhaseElement.textContent = currentPhrase;
+			
+			phraseResultElement = document.createElement('td');
+			phraseResultElement.innerHTML = `<span style="color: black;">Waiting...</span>`;
+			
+			//Attach read aloud icon to table's expected phrase
+			let readAloudIcon = document.createElement('span');
+			readAloudIcon.innerHTML = "🔊";
+			readAloudIcon.style.cursor = "pointer";
+			
+			readAloudIcon.addEventListener('click', () => {
+				//Read phrase aloud
+				utterance.text = currentPhrase;
+				synth.speak(utterance);
+			});
+			expectedPhaseElement.appendChild(readAloudIcon);
+			
+			row.appendChild(expectedPhaseElement);
+			row.appendChild(phraseResultElement);
+			phraseResultsElement.appendChild(row);
 			
 			countDownTimer = setInterval(() => {
 				
@@ -136,23 +159,7 @@ function newPhrase(){
 					remain--;
 					remainElement.textContent = remain;
 					
-					let row = document.createElement('tr');
-					let expectedPhaseElement = document.createElement('td');
-					let phraseResultElement = document.createElement('td');
-					
-					if(phraseResultElement.innerHTML.length === 0){
-						phraseResultElement.innerHTML = `<span style="color: black;">No detected</span>`;
-					}
-					
-					expectedPhaseElement.addEventListener('click', () => {
-						//Read phrase aloud
-						utterance.text = currentPhrase;
-						synth.speak(utterance);
-					});
-					
-					row.appendChild(expectedPhaseElement);
-					row.appendChild(phraseResultElement);
-					phraseResultsElement.appendChild(row);
+					phraseResultElement.innerHTML = `<span style="color: black;">No detected</span>`;
 				}
 				//Display current phrase time second
 				phraseTimeElement.textContent = phraseTime;
