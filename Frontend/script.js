@@ -176,7 +176,7 @@ function newPhrase(){
 					remainElement.textContent = remain;
 					
 					if(phraseResultElement.innerHTML === `<span style="color: black;">Waiting...</span>`){
-						phraseResultElement.innerHTML = `<span style="color: black;">Nothing detected</span>`;
+						phraseResultElement.innerHTML = `<span style="color: black;">${currentPhrase}</span>`;
 					}
 				}
 				//Display current phrase time second
