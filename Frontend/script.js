@@ -199,43 +199,54 @@ recognizer.onresult = function(event) {
 	spoken = event.results[event.resultIndex][0].transcript;
 	
 	let spokenWords = clearAndFormatAsWordsArray(spoken);
+	let currentPhraseAsWords = clearAndFormatAsWordsArray(currentPhrase);
 	
-	let = currentPhraseAsWords = clearAndFormatAsWordsArray(currentPhrase);
+	outputElement.innerHTML = generateSpokenHTMLReference(currentPhraseAsWords, spokenWords);
+	currentPhraseResultElement.innerHTML = generateSpokenHTMLReference(currentPhraseAsWords, spokenWords);
 	
 	currentPhraseAsWords.forEach( (word, index) => {
 		if(spokenWords[index] !== undefined){
 			
-			if(spokenWords[index] === word){
+			if(spokenWords[index] === word && !processedWordIndexs.includes(index)){
 				
-				let spokenPhraseElementReference = `<span style="color: green;">${word} </span>`;
-				outputElement.innerHTML += spokenPhraseElementReference;
-				currentPhraseResultElement.innerHTML += spokenPhraseElementReference;
+				//Increase points
+				points++;
+				pointsElement.textContent = points;
+				assertSound.play();
 				
-				if(!processedWordIndexs.includes(index)){
-					
-					//Increase points
-					points++;
-					pointsElement.textContent = points;
-					assertSound.play();
-					
-					processedWordIndexs.push(index);
-				}
-				return;
+				processedWordIndexs.push(index);
 			}
-			else{
-				//The word doesn't match
-				let spokenPhraseElementReference = `<span style="color: red;">${spokenWords[index]} </span>`;
-				outputElement.innerHTML += spokenPhraseElementReference;
-				currentPhraseResultElement.innerHTML += spokenPhraseElementReference;
-			}
-		}
-		else{
-			//The word was not spoken (or detected)
-			let spokenPhraseElementReference = `<span style="color: black;">${word} </span>`;
-			outputElement.innerHTML += spokenPhraseElementReference;
-			currentPhraseResultElement.innerHTML += spokenPhraseElementReference;
 		}
 	});
+}
+
+function generateSpokenHTMLReference(expectedPhrase, spoken){
+	
+	let htmlResult = "";
+	let newWord;
+	let color;
+	
+	expectedPhrase.forEach( (word, index) => {
+		if(spoken[index] !== undefined){
+			
+			if(spoken[index] === word){
+				//The word matchs
+				newWord = word;
+				color = "green";
+			}
+			else{
+				//, doesn't match
+				newWord = spoken[index];
+				color = "red";
+			}
+		}else{
+			//The word has not been spoken (or detected)
+			newWord = word;
+			color = "black";
+		}
+		htmlResult += `<span style="color: ${color};">${newWord} </span>`;
+	});
+	return htmlResult;
 }
 
 
