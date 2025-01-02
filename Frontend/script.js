@@ -168,6 +168,9 @@ function newPhrase(){
 			
 			if(phraseTime <= 0){
 				
+				clearInterval(nextPhraseDelayTimer);
+				clearInterval(countDownTimer);
+				
 				if(phraseResultElement.innerHTML === '<span style="color: black;">Waiting...</span>'){
 					phraseResultElement.innerHTML = `<span style="color: black;">${currentPhrase}</span>`;
 				}
@@ -201,7 +204,8 @@ recognizer.onresult = function(event) {
 		
 		//Verify if phrase has been already spoken
 		if(phraseCompleted){
-			skipToNextPhrase();
+			//First, wait a seconds to process the last results
+			waitToCheckResultsBeforeNextPhrase();
 		}
 	}
 }
@@ -209,37 +213,38 @@ recognizer.onresult = function(event) {
 
 function skipToNextPhrase(){
 	
-	checkingResults = true;
 	phraseIndex++;
+	
+	//If room still has phrases to show
+	if(phraseIndex < phrases.length){
+		
+		//Update remaining phrases number
+		remain--;
+		remainElement.textContent = remain;
+		
+		newPhrase();
+	}else{
+		//Room finished
+		stopRoom();
+	}
+}
+
+function waitToCheckResultsBeforeNextPhrase(){
 	
 	clearInterval(nextPhraseDelayTimer);
 	clearInterval(countDownTimer);
 	
-	//First, wait a seconds to process the last results
+	checkingResults = true;
 	let time = 0;
 	let timerBeforeSkipToNextPhrase = setInterval(() => {
 			
-			time++;	
-			if(time > 1){
-				
-				clearInterval(timerBeforeSkipToNextPhrase);
-				
-				//If room still has phrases to show
-				if(phraseIndex < phrases.length){
-					
-					//Update remaining phrases number
-					remain--;
-					remainElement.textContent = remain;
-					
-					
-					newPhrase();
-					checkingResults = false;
-					spoken = "";
-				}else{
-					//Room finished
-					stopRoom();
-				}
-			}
+		time++;	
+		if(time > 1){
+			
+			clearInterval(timerBeforeSkipToNextPhrase);
+			checkingResults = false;
+			skipToNextPhrase();
+		}
 	}, 1000);
 }
 
