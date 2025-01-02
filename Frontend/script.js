@@ -1,8 +1,8 @@
 const language = "en-US";
 
 var phrases = [
-	"This is a test.",
 	"So, just say the phrases.",
+	"This is a test.",
 	"And pronunciate as good as you can."
 ];
 
@@ -23,6 +23,7 @@ var currentPhrase;
 var currentPhraseAsWords;
 var cleanAndFormatCurrentPhraseAsWords;
 var phraseIndex = 0;
+var phraseCompleted = true;
 var remain;
 var processedWordIndexs = [];
 var phraseTime;
@@ -114,84 +115,68 @@ function stopRoom(){
 	}
 }
 
-
 function newPhrase(){
 	
-	//If room still has phrases to show
-	if(phraseIndex < phrases.length){
+	//Get new phrase
+	currentPhrase = phrases[phraseIndex];
+	currentPhraseAsWords = currentPhrase.trim().split(/\s+/);
+	cleanAndFormatCurrentPhraseAsWords = clearAndFormatAsWordsArray(currentPhrase);
+	processedWordIndexs = [];
+
+	outputElement.innerHTML = "";
+	phraseElement.textContent = currentPhrase;
+
+	clearInterval(nextPhraseDelayTimer);
+
+	if(recognizerStarted){
 		
-		//Get new phrase
-		currentPhrase = phrases[phraseIndex];
-		currentPhraseAsWords = currentPhrase.trim().split(/\s+/);
-		cleanAndFormatCurrentPhraseAsWords = clearAndFormatAsWordsArray(currentPhrase);
-		processedWordIndexs = [];
+		//And keep track of phrase's elapsed time
+		phraseTime = Math.floor(clearAndFormatAsWordsArray(currentPhrase).length);
+		phraseTimeElement.textContent = phraseTime;
 		
-		outputElement.innerHTML = "";
-		phraseElement.textContent = currentPhrase;
+		let row = document.createElement('tr');
 		
-		clearInterval(nextPhraseDelayTimer);
+		let expectedPhaseElement = document.createElement('td');
+		expectedPhaseElement.textContent = currentPhrase;
 		
-		if(recognizerStarted){
+		let phraseResultElement = document.createElement('td');
+		phraseResultElement.innerHTML = `<span style="color: black;">Waiting...</span>`;
+		currentPhraseResultElement = phraseResultElement;
+		
+		//Attach read aloud icon to table's expected phrase
+		let readAloudIcon = document.createElement('span');
+		readAloudIcon.innerHTML = "🔊";
+		readAloudIcon.style.cursor = "pointer";
+		
+		let currentPhraseToRead = phrases[phraseIndex];
+		readAloudIcon.addEventListener('click', () => {
 			
-			//And keep track of phrase's elapsed time
-			phraseTime = Math.floor(clearAndFormatAsWordsArray(currentPhrase).length);
-			phraseTimeElement.textContent = phraseTime;
+			//Read phrase aloud
+			utterance.text = currentPhraseToRead;
+			synth.speak(utterance);
+		});
+		expectedPhaseElement.appendChild(readAloudIcon);
+		
+		row.appendChild(expectedPhaseElement);
+		row.appendChild(phraseResultElement);
+		phraseResultsElement.appendChild(row);
+		
+		countDownTimer = setInterval(() => {
 			
-			let row = document.createElement('tr');
+			phraseTime--;
 			
-			let expectedPhaseElement = document.createElement('td');
-			expectedPhaseElement.textContent = currentPhrase;
-			
-			let phraseResultElement = document.createElement('td');
-			phraseResultElement.innerHTML = `<span style="color: black;">Waiting...</span>`;
-			currentPhraseResultElement = phraseResultElement;
-			
-			//Attach read aloud icon to table's expected phrase
-			let readAloudIcon = document.createElement('span');
-			readAloudIcon.innerHTML = "🔊";
-			readAloudIcon.style.cursor = "pointer";
-			
-			let currentPhraseToRead = phrases[phraseIndex];
-			readAloudIcon.addEventListener('click', () => {
+			if(phraseTime <= 0){
 				
-				//Read phrase aloud
-				utterance.text = currentPhraseToRead;
-				synth.speak(utterance);
-			});
-			expectedPhaseElement.appendChild(readAloudIcon);
-			
-			row.appendChild(expectedPhaseElement);
-			row.appendChild(phraseResultElement);
-			phraseResultsElement.appendChild(row);
-			
-			countDownTimer = setInterval(() => {
-				
-				phraseTime--;
-				
-				if(phraseTime <= 0){
-					clearInterval(countDownTimer);
-					
-					//Update remaining phrases number
-					remain--;
-					remainElement.textContent = remain;
-					
-					if(phraseResultElement.innerHTML === `<span style="color: black;">Waiting...</span>`){
-						phraseResultElement.innerHTML = `<span style="color: black;">${currentPhrase}</span>`;
-					}
+				if(phraseResultElement.innerHTML === '<span style="color: black;">Waiting...</span>'){
+					phraseResultElement.innerHTML = `<span style="color: black;">${currentPhrase}</span>`;
 				}
-				//Display current phrase time second
-				phraseTimeElement.textContent = phraseTime;
-			}, 1000);
-		}
-		
-		nextPhraseDelayTimer = setInterval(newPhrase, phraseTime*1000);
-		
-		phraseIndex++;
+				skipToNextPhrase();
+			}
+			//Display current phrase time second
+			phraseTimeElement.textContent = phraseTime;
+		}, 1000);
 	}
-	else{
-		//Room finished
-		stopRoom();
-	}	
+	nextPhraseDelayTimer = setInterval(newPhrase, phraseTime*1000);
 }
 
 //On each speach recognition
@@ -200,28 +185,41 @@ recognizer.onresult = function(event) {
 	outputElement.innerHTML = "";
 	currentPhraseResultElement.innerHTML = "";
 	
-	spoken = event.results[event.resultIndex][0].transcript;
+	phraseCompleted = true; 
 	
+	spoken = event.results[event.resultIndex][0].transcript;
 	let spokenWords = clearAndFormatAsWordsArray(spoken);
 	
 	let htmlResultReference = generateSpokenHTMLReference(cleanAndFormatCurrentPhraseAsWords, spokenWords);
 	outputElement.innerHTML = htmlResultReference;
 	currentPhraseResultElement.innerHTML = htmlResultReference;
 	
-	cleanAndFormatCurrentPhraseAsWords.forEach( (word, index) => {
-		if(spokenWords[index] !== undefined){
-			
-			if(spokenWords[index] === word && !processedWordIndexs.includes(index)){
-				
-				//Increase points
-				points++;
-				pointsElement.textContent = points;
-				assertSound.play();
-				
-				processedWordIndexs.push(index);
-			}
-		}
-	});
+	//Verify if phrase has been already spoken
+	if(phraseCompleted){
+		skipToNextPhrase();
+	}
+}
+
+function skipToNextPhrase(){
+	
+	phraseIndex++;
+	
+	clearInterval(nextPhraseDelayTimer);
+	clearInterval(countDownTimer);
+	
+	//If room still has phrases to show
+	if(phraseIndex < phrases.length){
+		
+		//Update remaining phrases number
+		remain--;
+		remainElement.textContent = remain;
+		
+		
+		newPhrase();
+	}else{
+		//Room finished
+		stopRoom();
+	}
 }
 
 function generateSpokenHTMLReference(expectedPhrase, spoken){
@@ -237,6 +235,17 @@ function generateSpokenHTMLReference(expectedPhrase, spoken){
 				//The word matchs
 				newWord = currentPhraseAsWords[index];
 				color = "green";
+				
+				//If resutl is not repeated
+				if(!processedWordIndexs.includes(index)){
+					
+					//Increase points
+					points++;
+					pointsElement.textContent = points;
+					assertSound.play();
+					
+					processedWordIndexs.push(index);
+				}
 			}
 			else{
 				//, doesn't match
@@ -245,6 +254,8 @@ function generateSpokenHTMLReference(expectedPhrase, spoken){
 			}
 		}else{
 			//The word has not been spoken (or detected)
+			phraseCompleted = false;
+			
 			newWord = currentPhraseAsWords[index];
 			color = "black";
 		}
@@ -255,5 +266,5 @@ function generateSpokenHTMLReference(expectedPhrase, spoken){
 
 
 function clearAndFormatAsWordsArray(text){
-	return text.trim().replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "").toLowerCase().split(/\s+/);
+	return text.trim().replace(/[.,\/#!$%\^&\*;:{}=\-_~()]/g, "").toLowerCase().split(/\s+/);
 }
