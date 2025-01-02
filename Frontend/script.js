@@ -27,6 +27,7 @@ var phraseCompleted = true;
 var remain;
 var processedWordIndexs = [];
 var phraseTime;
+var checkingResults = false;
 
 var nextPhraseDelayTimer = null;
 var countDownTimer = null;
@@ -179,47 +180,67 @@ function newPhrase(){
 	nextPhraseDelayTimer = setInterval(newPhrase, phraseTime*1000);
 }
 
+
+
 //On each speach recognition
 recognizer.onresult = function(event) {
 		
-	outputElement.innerHTML = "";
-	currentPhraseResultElement.innerHTML = "";
-	
-	phraseCompleted = true; 
-	
-	spoken = event.results[event.resultIndex][0].transcript;
-	let spokenWords = clearAndFormatAsWordsArray(spoken);
-	
-	let htmlResultReference = generateSpokenHTMLReference(cleanAndFormatCurrentPhraseAsWords, spokenWords);
-	outputElement.innerHTML = htmlResultReference;
-	currentPhraseResultElement.innerHTML = htmlResultReference;
-	
-	//Verify if phrase has been already spoken
-	if(phraseCompleted){
-		skipToNextPhrase();
+	if(!checkingResults){
+		
+		outputElement.innerHTML = "";
+		currentPhraseResultElement.innerHTML = "";
+		
+		phraseCompleted = true; 
+		
+		spoken = event.results[event.resultIndex][0].transcript;
+		let spokenWords = clearAndFormatAsWordsArray(spoken);
+		
+		let htmlResultReference = generateSpokenHTMLReference(cleanAndFormatCurrentPhraseAsWords, spokenWords);
+		outputElement.innerHTML = htmlResultReference;
+		currentPhraseResultElement.innerHTML = htmlResultReference;
+		
+		//Verify if phrase has been already spoken
+		if(phraseCompleted){
+			skipToNextPhrase();
+		}
 	}
 }
 
+
 function skipToNextPhrase(){
 	
+	checkingResults = true;
 	phraseIndex++;
 	
 	clearInterval(nextPhraseDelayTimer);
 	clearInterval(countDownTimer);
 	
-	//If room still has phrases to show
-	if(phraseIndex < phrases.length){
-		
-		//Update remaining phrases number
-		remain--;
-		remainElement.textContent = remain;
-		
-		
-		newPhrase();
-	}else{
-		//Room finished
-		stopRoom();
-	}
+	//First, wait a seconds to process the last results
+	let time = 0;
+	let timerBeforeSkipToNextPhrase = setInterval(() => {
+			
+			time++;	
+			if(time > 1){
+				
+				clearInterval(timerBeforeSkipToNextPhrase);
+				
+				//If room still has phrases to show
+				if(phraseIndex < phrases.length){
+					
+					//Update remaining phrases number
+					remain--;
+					remainElement.textContent = remain;
+					
+					
+					newPhrase();
+					checkingResults = false;
+					spoken = "";
+				}else{
+					//Room finished
+					stopRoom();
+				}
+			}
+	}, 1000);
 }
 
 function generateSpokenHTMLReference(expectedPhrase, spoken){
