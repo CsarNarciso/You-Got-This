@@ -66,6 +66,7 @@ document.getElementById('startRoom').onclick = function(){
 		
 		recognizerStarted = true;
 		
+		
 		points = 0;
 		pointsElement.textContent = points;
 		finalScoreElement.textContent = points;
@@ -73,6 +74,8 @@ document.getElementById('startRoom').onclick = function(){
 		remain = phrases.length;
 		remainElement.textContent = remain;
 		
+		//Hide results elements
+		document.getElementById('resultsContainer').style.display = 'none';
 		phraseResultsElement.innerHTML = "";
 			
 		//Play start room sound effect
@@ -106,6 +109,8 @@ function stopRoom(){
 	recognizer.stop();
 	
 	//Display results
+	document.getElementById('resultsContainer').style.display = 'block';
+	
 	finalScoreElement.textContent = points;
 	
 	if(points > 0){
