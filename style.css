@@ -1,0 +1,13 @@
+body {
+	display: flex;
+	justify-content: center;
+	align-content: center;
+	text-align: center;
+}
+
+
+.main__container {
+	width: 400px;
+	margin-top: 60px;
+	border: 10px solid #94d6bb;
+}

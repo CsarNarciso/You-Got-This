@@ -4,51 +4,57 @@
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<title>You Got This!</title>
+		
+		<link rel="stylesheet" href="style.css">
 	</head>
     
     <body>
 	
-		<h1>Room</h1>
+		<div class="main__container">
+			
+			<h1>Room</h1>
 		
-		<button id="startRoom">Enter room</button>
+			<button id="startRoom">Enter room</button>
+			
+			<label>Time </label> <div id="phraseTime"></div>
 		
-		<label>Time </label> <div id="phraseTime"></div>
+			<label>Phrase</label>
+			<div id="phrase"></div>
+			<div id="output"></div>
+			
+			<br>
+			<label>Room Users</label>
+			<li id="roomUsers"></li>
+		
+			<br>
+			<label>Points </label> <div id="points">0</div>
+			<label>Remain </label> <div id="remain"></div>
+			
+			<br>
+			<label>Position </label> <div id="position"></div>
+			<ul id="positions">Positions</ul>
+			
+			<h1>Results</h1>
+			
+			<label>Final position </label> <div id="finalPosition"></div>
+			<ul id="finalPositions">Final positions</ul>
+			
+			<label>Final score </label> <div id="finalScore"></div>
+			
+			<table id="phraseResults">
+				
+				<thead>
+					<tr>
+						<th>Phrase</th>
+						<th>Result</th>
+					</tr>
+				</thead>
+				
+				<tbody></tbody>
+			</table>
+			
+		</div>
 	
-		<label>Phrase</label>
-		<div id="phrase"></div>
-		<div id="output"></div>
-		
-		<br>
-		<label>Room Users</label>
-		<li id="roomUsers"></li>
-    
-		<br>
-		<label>Points </label> <div id="points">0</div>
-		<label>Remain </label> <div id="remain"></div>
-		
-		<br>
-		<label>Position </label> <div id="position"></div>
-		<ul id="positions">Positions</ul>
-		
-		<h1>Results</h1>
-		
-		<label>Final position </label> <div id="finalPosition"></div>
-		<ul id="finalPositions">Final positions</ul>
-		
-		<label>Final score </label> <div id="finalScore"></div>
-		
-		<table id="phraseResults">
-			
-			<thead>
-				<tr>
-					<th>Phrase</th>
-					<th>Result</th>
-				</tr>
-			</thead>
-			
-			<tbody></tbody>
-		</table>
-		
 		
 		<script src="script.js"></script>
 	</body>
