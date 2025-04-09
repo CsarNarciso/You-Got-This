@@ -12,17 +12,19 @@
 	
 		<div class="main__container">
 			
-			<div class="room__container">
-			
-				<h1>Room</h1>
+			<div class="firstScreen__container" id="firstScreenContainer">
 				
-				<button id="startRoom">Enter room</button>
+				<h1>YOU GOT THIS!</h1>
+				<button id="startRoom">Start room</button>
+			</div>
 			
-				<label>Time </label> <div id="phraseTime"></div>
+			<div id="roomContainer" class="room__container">
 			
-				<label>Phrase</label>
-				<div id="phrase"></div>
+				<div class="phrase" id="phrase"></div>
+				
 				<div id="output"></div>				
+				
+				<div class="phraseTime" id="phraseTime"></div>
 				
 				<label>Points </label> <div id="points">0</div>
 				<label>Remain </label> <div id="remain"></div>
@@ -31,9 +33,11 @@
 			
 			<div id="resultsContainer" class="results__container">
 			
-				<h1>Results</h1>
+				<div class="finalScore">
+					<label>Final score </label>
+					<div id="finalScore"></div>
+				</div>
 				
-				<label>Final score </label> <div id="finalScore"></div>
 				
 				<table id="phraseResults">
 					

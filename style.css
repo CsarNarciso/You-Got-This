@@ -1,4 +1,5 @@
 body {
+	background-color: #f5f4f4;
 	display: flex;
 	justify-content: center;
 	align-content: center;
@@ -7,11 +8,45 @@ body {
 
 
 .main__container {
-	width: 400px;
-	margin-top: 200px;
-	border: 10px solid #94d6bb;
+	background-color: white;
+	width: 350px;
+	height: 400px;
+	margin-top: 130px;
+}
+
+.room__container {
+	display: none;
+	margin-top: 125px;
+}
+
+.phrase {
+	font-size: 30px;
+	font-style: bold;
+	margin-bottom: 20px;
+}
+
+.phraseTime {
+	font-size: 30px;
+	font-style: bold;
+	margin-bottom: 20px;
 }
 
 .results__container {
 	display: none;
+	margin-top: 110px;
+}
+
+.finalScore {
+	font-size: 30px;
+	font-style: bold;
+	margin-bottom: 20px;
+}
+
+.firstScreen__container {
+	margin-top: 150px;
+}
+
+.firstScreen__container button {
+	color: white;
+	background-color: green;
 }

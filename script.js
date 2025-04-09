@@ -67,6 +67,9 @@ document.getElementById('startRoom').onclick = function(){
 		recognizerStarted = true;
 		
 		
+		//Display room elements
+		document.getElementById('roomContainer').style.display = 'block';
+		
 		points = 0;
 		pointsElement.textContent = points;
 		finalScoreElement.textContent = points;
@@ -77,6 +80,9 @@ document.getElementById('startRoom').onclick = function(){
 		//Hide results elements
 		document.getElementById('resultsContainer').style.display = 'none';
 		phraseResultsElement.innerHTML = "";
+		
+		//Hide first screen elements
+		document.getElementById('firstScreenContainer').style.display = 'none';
 			
 		//Play start room sound effect
 		startRoomSound.play();
@@ -103,6 +109,9 @@ function stopRoom(){
 	remainElement.textContent = remain;
 	
 	phraseIndex = 0;
+	
+	//Hide room elements
+	document.getElementById('roomContainer').style.display = 'none';
 	
 	//Stop speaker
 	recognizerStarted = false;
