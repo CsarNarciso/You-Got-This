@@ -101,6 +101,10 @@ document.getElementById('startRoom').onclick = function(){
 	recognizer.onerror = function(){
 		stopRoom();
 	}
+	
+	recognizer.onend = function(){
+		stopRoom();
+	}
 }
 
 function stopRoom(){
