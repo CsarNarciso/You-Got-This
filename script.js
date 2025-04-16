@@ -1,10 +1,12 @@
 const language = "en-US";
 
-var phrases = [
-	"So, just say the phrases.",
-	"This is a test.",
-	"And pronunciate as good as you can."
+var allPhrases = [
+	"Dream big", "Stay strong", "Keep moving forward", "Never give up", "Love conquers all", "Believe in yourself", "Make it happen", "Follow your heart", "Take the leap", "Choose happiness", "Rise above fear", "Stay the course", "Live with purpose", "Trust the process", "Be the light", "Embrace the journey", "Keep hope alive", "Change is good", "Chase your dreams", "Let it go", "You are enough", "Be kind always", "Learn and grow", "Stay the path", "Just keep going", "Do it afraid", "Create your future", "Own your story", "Stay true always", "Breathe and smile", "Give more love", "Fear less live more", "Peace begins within", "You’ve got this", "Stay humble hustle hard", "Every day counts", "Focus on now", "Start with gratitude", "Lead with love", "Think positive thoughts", "Progress over perfection", "Go beyond limits", "Be here now", "One step closer", "Count your blessings", "Work with passion", "Speak your truth", "Light the way", "Do good daily", "Enjoy the moment", "Push past fear", "You are magic", "Act with courage", "Be a warrior", "Stay curious always", "Be wildly grateful", "Practice makes progress", "Trust your intuition", "Laugh out loud", "Rest and reset", "Shine your light", "Never stop learning", "Keep showing up", "Let love lead", "Be the change", "Live your truth", "Love without limits", "Begin with love", "Find your fire", "Inspire with action", "Stay soft strong", "Keep your faith", "Turn pain into power", "Grace over drama", "Grow through it", "Kindness is strength", "Let joy in", "Always choose love", "Find peace inside", "Be beautifully brave", "Stay beautifully flawed", "Hope is real", "Your voice matters", "Celebrate small wins", "You matter always", "Brave not perfect", "Love fiercely always", "Seek the sunshine", "Try again tomorrow", "Feel it all", "Stay grounded always", "Let your soul shine", "Small steps matter", "Keep your head high", "Your heart knows", "Let yourself bloom", "Patience brings peace", "Break your limits", "Be your peace"
 ];
+
+var phrases = [];
+
+
 
 var points = 0;
 
@@ -65,7 +67,13 @@ document.getElementById('startRoom').onclick = function(){
 	recognizer.onstart = function(){
 		
 		recognizerStarted = true;
+
 		
+		//Get random phrases for current room
+		for(let i = 0; i < 10; i++){
+			var randomPhrase = allPhrases[Math.floor(Math.random() * allPhrases.length)]
+			phrases.push(randomPhrase);
+		}
 		
 		//Display room elements
 		document.getElementById('roomContainer').style.display = 'block';
