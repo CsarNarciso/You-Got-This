@@ -98,7 +98,13 @@ document.getElementById('startRoom').onclick = function(){
 		newPhrase();
 	}
 	
+	recognizer.onend = function(){
+		console.log("end");
+	}
+	
 	recognizer.onerror = function(){
+				
+		console.log("error");
 				
 		//Hide first screen elements in case it fails before start room
 		if(!recognizerStarted){		

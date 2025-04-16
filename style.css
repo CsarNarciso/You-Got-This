@@ -69,7 +69,8 @@ body {
 }
 
 .phraseResults__container {
+	display: flex;
+	align-items: center;
 	overflow-y: auto;
-	overflow-x: hidden;
-	max-height: 30px;
+	max-height: 100px;
 }
