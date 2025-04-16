@@ -67,3 +67,9 @@ body {
 	width: 120px;
 	height: 40px;
 }
+
+.phraseResults__container {
+	overflow-y: auto;
+	overflow-x: hidden;
+	max-height: 30px;
+}

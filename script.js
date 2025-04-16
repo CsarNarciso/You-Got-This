@@ -99,6 +99,12 @@ document.getElementById('startRoom').onclick = function(){
 	}
 	
 	recognizer.onerror = function(){
+				
+		//Hide first screen elements in case it fails before start room
+		if(!recognizerStarted){		
+			document.getElementById('firstScreenContainer').style.display = 'none';
+		}
+		
 		stopRoom();
 	}
 	
@@ -122,8 +128,10 @@ function stopRoom(){
 	
 	phraseIndex = 0;
 	
+	
 	//Hide room elements
 	document.getElementById('roomContainer').style.display = 'none';
+	
 	
 	//Stop speaker
 	recognizerStarted = false;
