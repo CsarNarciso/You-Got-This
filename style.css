@@ -1,5 +1,5 @@
 body {
-	background-color: #f5f4f4;
+	background-color: #68acff;
 	display: flex;
 	justify-content: center;
 	align-content: center;
@@ -7,12 +7,16 @@ body {
 }
 
 
+
 .main__container {
 	background-color: white;
 	width: 350px;
 	height: 400px;
 	margin-top: 130px;
+	border-radius: 50px;
 }
+
+
 
 .room__container {
 	display: none;
@@ -43,10 +47,23 @@ body {
 }
 
 .firstScreen__container {
-	margin-top: 150px;
+	margin-top: 30px;
+}
+
+.firstScreen__container img {
+	width: 300px;
+	height: 200px;
+	margin-bottom: -30px;
 }
 
 .firstScreen__container button {
+	font-style: bold;
+	font-size: 20px;
 	color: white;
-	background-color: green;
+	background-color: #aafca5;
+	border: 1px solid #aafca5;
+	border-radius: 50px;
+	cursor: pointer;
+	width: 120px;
+	height: 40px;
 }
