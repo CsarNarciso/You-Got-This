@@ -71,7 +71,7 @@ document.getElementById('startRoom').onclick = function(){
 		
 		//Get random phrases for current room
 		for(let i = 0; i < 10; i++){
-			var randomPhrase = allPhrases[Math.floor(Math.random() * allPhrases.length)]
+			var randomPhrase = allPhrases[Math.floor(Math.random() * allPhrases.length)];
 			phrases.push(randomPhrase);
 		}
 		
@@ -154,7 +154,7 @@ function newPhrase(){
 	if(recognizerStarted){
 		
 		//And keep track of phrase's elapsed time
-		phraseTime = Math.floor(clearAndFormatAsWordsArray(currentPhrase).length);
+		phraseTime = Math.floor(clearAndFormatAsWordsArray(currentPhrase).length) + 1;
 		phraseTimeElement.textContent = phraseTime;
 		
 		let row = document.createElement('tr');
