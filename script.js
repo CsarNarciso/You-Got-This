@@ -107,10 +107,6 @@ document.getElementById('startRoom').onclick = function(){
 		
 		stopRoom();
 	}
-	
-	recognizer.onend = function(){
-		stopRoom();
-	}
 }
 
 function stopRoom(){
