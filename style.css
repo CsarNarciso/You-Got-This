@@ -68,9 +68,16 @@ body {
 	height: 40px;
 }
 
+table {
+	margin: 0 auto;
+}
+
+td {
+	font-size: 12px;
+	padding: 10px;
+}
+
 .phraseResults__container {
-	display: flex;
-	align-items: center;
-	overflow-y: auto;
 	height: 100px;
+	overflow-y: auto;
 }
