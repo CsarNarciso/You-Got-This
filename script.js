@@ -40,7 +40,7 @@ var SpeechRecognitionEvent = SpeechRecognitionEvent || webkitSpeechRecognitionEv
 
 const recognizer = new SpeechRecognition();
 recognizer.lang = language;
-recognizer.continuous = (isMobile()) ? false : true;
+recognizer.continuous = (isMobile()) ? false : true; //no continous if mobile to avoid mobile browser auto stop micrhopone error
 
 
 recognizer.interimResults = true;
