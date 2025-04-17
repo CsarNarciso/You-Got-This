@@ -323,8 +323,11 @@ function generateSpokenHTMLReference(expectedPhrase, spoken){
 					points++;
 					pointsElement.textContent = points;
 					
-					//Play sound effect
-					assertSound.play();
+					//Play sound effect (no for mobile because of high delay)
+					if(!isMobile()){
+						assertSound.play();
+					}
+						
 					
 					processedWordIndexs.push(index);
 				}
