@@ -99,6 +99,7 @@ document.getElementById('startRoom').onclick = function(){
 			document.getElementById('firstScreenContainer').style.display = 'none';
 				
 			//Play start room sound effect
+			startRoomSound.load();
 			startRoomSound.play();
 			
 			newPhrase();
@@ -152,9 +153,11 @@ function stopRoom(){
 	finalScoreElement.textContent = points;
 	
 	if(points > 0){
+		celebrateSound.load();
 		celebrateSound.play();
 	}
 	else{
+		defeatSound.load();
 		defeatSound.play();
 	}
 }
@@ -311,6 +314,9 @@ function generateSpokenHTMLReference(expectedPhrase, spoken){
 					//Increase points
 					points++;
 					pointsElement.textContent = points;
+					
+					//Play sound effect
+					assertSound.load();
 					assertSound.play();
 					
 					processedWordIndexs.push(index);
