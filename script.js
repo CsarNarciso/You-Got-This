@@ -99,7 +99,6 @@ document.getElementById('startRoom').onclick = function(){
 			document.getElementById('firstScreenContainer').style.display = 'none';
 				
 			//Play start room sound effect
-			startRoomSound.load();
 			startRoomSound.play();
 			
 			newPhrase();
@@ -124,6 +123,13 @@ document.getElementById('startRoom').onclick = function(){
 }
 
 function stopRoom(){
+	
+	//Re load sounds
+	startRoomSound.load();
+	assertSound.load();
+	celebrateSound.load();
+	defeatSound.load();
+	
 	
 	clearInterval(nextPhraseDelayTimer);
 	clearInterval(countDownTimer);
@@ -153,11 +159,9 @@ function stopRoom(){
 	finalScoreElement.textContent = points;
 	
 	if(points > 0){
-		celebrateSound.load();
 		celebrateSound.play();
 	}
 	else{
-		defeatSound.load();
 		defeatSound.play();
 	}
 }
@@ -220,6 +224,11 @@ function newPhrase(){
 				if(phraseResultElement.innerHTML === '<span style="color: black;">Waiting...</span>'){
 					phraseResultElement.innerHTML = `<span style="color: black;">${currentPhrase}</span>`;
 				}
+				
+				//Re load assert effect sound
+				assertSound.load();
+				
+				//Pass to next phrase
 				skipToNextPhrase();
 			}
 			//Display current phrase time second
@@ -316,7 +325,6 @@ function generateSpokenHTMLReference(expectedPhrase, spoken){
 					pointsElement.textContent = points;
 					
 					//Play sound effect
-					assertSound.load();
 					assertSound.play();
 					
 					processedWordIndexs.push(index);
