@@ -40,7 +40,9 @@ var SpeechRecognitionEvent = SpeechRecognitionEvent || webkitSpeechRecognitionEv
 
 const recognizer = new SpeechRecognition();
 recognizer.lang = language;
-recognizer.continuous = true;
+recognizer.continuous = (isMobile()) ? false : true;
+
+
 recognizer.interimResults = true;
 
 var recognizerStarted = false;
@@ -66,36 +68,39 @@ document.getElementById('startRoom').onclick = function(){
 		
 	recognizer.onstart = function(){
 		
-		recognizerStarted = true;
-
-		
-		//Get random phrases for current room
-		for(let i = 0; i < 10; i++){
-			var randomPhrase = allPhrases[Math.floor(Math.random() * allPhrases.length)];
-			phrases.push(randomPhrase);
-		}
-		
-		//Display room elements
-		document.getElementById('roomContainer').style.display = 'block';
-		
-		points = 0;
-		pointsElement.textContent = points;
-		finalScoreElement.textContent = points;
-		
-		remain = phrases.length;
-		remainElement.textContent = remain;
-		
-		//Hide results elements
-		document.getElementById('resultsContainer').style.display = 'none';
-		phraseResultsElement.innerHTML = "";
-		
-		//Hide first screen elements
-		document.getElementById('firstScreenContainer').style.display = 'none';
+		//Only in first time start (no restarts)
+		if(!recognizerStarted){
 			
-		//Play start room sound effect
-		startRoomSound.play();
-		
-		newPhrase();
+			recognizerStarted = true;
+			
+			//Get random phrases for current room
+			for(let i = 0; i < 2; i++){
+				var randomPhrase = allPhrases[Math.floor(Math.random() * allPhrases.length)];
+				phrases.push(randomPhrase);
+			}
+			
+			//Display room elements
+			document.getElementById('roomContainer').style.display = 'block';
+			
+			points = 0;
+			pointsElement.textContent = points;
+			finalScoreElement.textContent = points;
+			
+			remain = phrases.length;
+			remainElement.textContent = remain;
+			
+			//Hide results elements
+			document.getElementById('resultsContainer').style.display = 'none';
+			phraseResultsElement.innerHTML = "";
+			
+			//Hide first screen elements
+			document.getElementById('firstScreenContainer').style.display = 'none';
+				
+			//Play start room sound effect
+			startRoomSound.play();
+			
+			newPhrase();
+		}
 	}
 
 	recognizer.onerror = function(){
@@ -104,8 +109,14 @@ document.getElementById('startRoom').onclick = function(){
 		if(!recognizerStarted){		
 			document.getElementById('firstScreenContainer').style.display = 'none';
 		}
-		
 		stopRoom();
+	}
+	
+	recognizer.onend = function(){
+		//Try to re-star recognizer only if it was already started
+		if(recognizerStarted){
+			recognizer.start();
+		}
 	}
 }
 
@@ -323,4 +334,9 @@ function generateSpokenHTMLReference(expectedPhrase, spoken){
 
 function clearAndFormatAsWordsArray(text){
 	return text.trim().replace(/[.,\/#!$%\^&\*;:{}=\-_~()]/g, "").toLowerCase().split(/\s+/);
+}
+
+
+function isMobile(){
+	return ( (window.innerWidth <= 800) && (window.innerHeight <= 600) );
 }

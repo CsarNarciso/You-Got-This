@@ -72,5 +72,5 @@ body {
 	display: flex;
 	align-items: center;
 	overflow-y: auto;
-	max-height: 100px;
+	height: 100px;
 }
