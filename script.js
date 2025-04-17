@@ -56,10 +56,9 @@ utterance.lang = language;
 
 
 //Audios
-var startRoomSound = new Audio('./sound/startRoom.mp3');
-var assertSound = new Audio('./sound/assert.mp3');
-var celebrateSound = new Audio('./sound/victory.mp3');
-var defeatSound = new Audio('./sound/defeat.mp3');
+var startRoomSound = new Audio('./media/sound/startRoom.mp3');
+var celebrateSound = new Audio('.media//sound/victory.mp3');
+var defeatSound = new Audio('./media/sound/defeat.mp3');
 
 //On start room
 document.getElementById('startRoom').onclick = function(){
@@ -309,7 +308,6 @@ function generateSpokenHTMLReference(expectedPhrase, spoken){
 					//Increase points
 					points++;
 					pointsElement.textContent = points;
-					assertSound.play();
 					
 					processedWordIndexs.push(index);
 				}
