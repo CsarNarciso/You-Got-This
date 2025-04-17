@@ -29,7 +29,7 @@ body {
 	margin-bottom: 20px;
 }
 
-.phraseTime {
+.points {
 	font-size: 30px;
 	font-style: bold;
 	margin-bottom: 20px;
@@ -78,6 +78,6 @@ td {
 }
 
 .phraseResults__container {
-	height: 100px;
+	height: 150px;
 	overflow-y: auto;
 }

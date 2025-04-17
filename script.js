@@ -57,7 +57,6 @@ utterance.lang = language;
 
 //Audios
 var audioBasePath = './sound/' + (isMobile() ? 'mobile/' : '');
-console.log(audioBasePath);
 var startRoomSound = new Audio(audioBasePath + 'startRoom.mp3');
 var assertSound = new Audio(audioBasePath + 'assert.mp3');
 var celebrateSound = new Audio(audioBasePath + 'victory.mp3');
