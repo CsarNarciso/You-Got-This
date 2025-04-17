@@ -74,7 +74,7 @@ document.getElementById('startRoom').onclick = function(){
 			recognizerStarted = true;
 			
 			//Get random phrases for current room
-			for(let i = 0; i < 2; i++){
+			for(let i = 0; i < 10; i++){
 				var randomPhrase = allPhrases[Math.floor(Math.random() * allPhrases.length)];
 				phrases.push(randomPhrase);
 			}
