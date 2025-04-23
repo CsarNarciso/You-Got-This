@@ -2,10 +2,10 @@
 
 # You Got This!
 
-[presentation.webm](https://github.com/user-attachments/assets/1c0a915a-f946-489b-8393-62f6f8dc773d)
-
 
 <a href="https://csarnarciso.github.io/You-Got-This" target="_blank"><img alt="TryItOut" src="https://img.shields.io/badge/Try%20It%20Out!-230077B5?&style=for-the-badge" /></a>
+
+[presentation.webm](https://github.com/user-attachments/assets/1c0a915a-f946-489b-8393-62f6f8dc773d)
 
 ----------------------
 
@@ -38,8 +38,8 @@
 
 ----------------------
 
-# I'm looking for my first dev job
-### <img align="center" width="70" src="https://i.pinimg.com/originals/0d/c9/68/0dc968448592a7d533096b74c263cc40.gif" /> Contact me!
+# Im looking for my first dev job ♥ 
+### <img align="center" width="70" src="https://i.pinimg.com/originals/0d/c9/68/0dc968448592a7d533096b74c263cc40.gif" /> Contact Me!
 
 <a href="https://mail.google.com/mail/u/0/?fs=1&tf=cm&source=mailto&to=cesarpazol1029@gmail.com" target="_blank"><img alt="Gmail" src="https://img.shields.io/badge/Gmail-D14836?style=for-the-badge&logo=gmail&logoColor=white" /></a>
 <a href="https://www.linkedin.com/in/cesar-pozol-narciso-b48727180/" target="_blank"><img alt="LinkedIn" src="https://img.shields.io/badge/linkedin-%230077B5.svg?&style=for-the-badge&logo=linkedin&logoColor=white" /></a>
